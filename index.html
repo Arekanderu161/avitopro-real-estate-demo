@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AvitoPRO uniexp — Презентация для агентства недвижимости</title>
+  <style>
+    :root {
+      --bg-stage: #0B1120;
+      --bg-stage-card: #111827;
+      --border-stage: rgba(255, 255, 255, 0.1);
+      --brand-blue: #0099F7;
+      --brand-blue-dark: #0077C8;
+      --brand-purple: #965EEB;
+      --brand-red: #FF4053;
+      --brand-green: #04E061;
+      --ui-bg: #F6F8FA;
+      --ui-white: #FFFFFF;
+      --ui-border: #DFE3E8;
+      --ui-text: #1F2328;
+      --ui-muted: #59636E;
+      --ui-light: #8C959F;
+      --down-bg: #E6F4EA;
+      --down-fg: #137333;
+      --up-bg: #FCE8E6;
+      --up-fg: #B3261E;
+      --amber: #F59E0B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: radial-gradient(circle at 15% 10%, #16233D 0%, var(--bg-stage) 58%);
+      color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Верхняя панель управления презентацией */
+    .deck-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 22px;
+      background: rgba(11, 17, 32, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-stage);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+
+    .deck-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avito-dots {
+      display: inline-grid;
+      grid-template-columns: 8px 8px;
+      gap: 2.5px;
+    }
+
+    .avito-dots i {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-b { background: #00AAFF; }
+    .dot-p { background: #965EEB; }
+    .dot-r { background: #FF4053; }
+    .dot-g { background: #04E061; }
+
+    .deck-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .deck-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #FFFFFF;
+    }
+
+    .deck-subtitle {
+      font-size: 11.5px;
+      color: #94A3B8;
+    }
+
+    .scene-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .scene-tab {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: #CBD5E1;
+      padding: 6px 11px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scene-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+    }
+
+    .scene-tab.active {
+      background: rgba(0, 153, 247, 0.2);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 1px rgba(0, 153, 247, 0.35);
+    }
+
+    .scene-tab .tab-progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--brand-blue);
+      width: 0%;
+      transition: width 0.15s linear;
+    }
+
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ctrl-btn {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #F8FAFC;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .ctrl-btn.primary {
+      background: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    .ctrl-btn.primary:hover {
+      background: var(--brand-blue-dark);
+    }
+
+    .mode-pill {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(4, 224, 97, 0.15);
+      color: #4ADE80;
+      border: 1px solid rgba(4, 224, 97, 0.35);
+    }
+
+    .mode-pill.manual {
+      background: rgba(245, 158, 11, 0.16);
+      color: #FBBF24;
+      border-color: rgba(245, 158, 11, 0.38);
+    }
+
+    /* Основная сцена */
+    .stage-wrap {
+      flex: 1;
+      max-width: 1360px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 22px 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .scene-panel {
+      display: none;
+      animation: fadeSlideIn 0.35s ease;
+    }
+
+    .scene-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Сцена 1: Обзор для АН */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-main {
+      background: linear-gradient(145deg, rgba(17, 24, 39, 0.96), rgba(15, 23, 42, 0.88));
+      border: 1px solid var(--border-stage);
+      border-radius: 16px;
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #38BDF8;
+      margin-bottom: 14px;
+    }
+
+    .hero-h1 {
+      font-size: clamp(26px, 3.1vw, 38px);
+      line-height: 1.16;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+    }
+
+    .hero-h1 span {
+      background: linear-gradient(90deg, #38BDF8, #818CF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-lead {
+      margin-top: 16px;
+      font-size: 15.5px;
+      line-height: 1.55;
+      color: #CBD5E1;
+      max-width: 640px;
+    }
+
+    .hero-kpis {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kpi-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .kpi-lbl {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #94A3B8;
+      line-height: 1.35;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .value-card {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid var(--border-stage);
+      border-radius: 12px;
+      padding: 16px 18px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .value-card:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      transform: translateX(3px);
+    }
+
+    .value-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .value-card h3 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+
+    .value-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0, 153, 247, 0.16);
+      color: #7DD3FC;
+    }
+
+    .value-card p {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #94A3B8;
+    }
+
+    /* Макет окна браузера Chrome */
+    .browser-window {
+      background: var(--ui-white);
+      color: var(--ui-text);
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .browser-bar {
+      background: #E8EAED;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #D0D5DD;
+    }
+
+    .win-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .win-dots span {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .wd-r { background: #FF5F56; }
+    .wd-y { background: #FFBD2E; }
+    .wd-g { background: #27C93F; }
+
+    .address-bar {
+      flex: 1;
+      background: #FFFFFF;
+      border: 1px solid #D0D5DD;
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: #475467;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ext-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      color: #0369A1;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* Сцена 2: Выдача Авито + Боковая панель AvitoPRO */
+    .split-browser {
+      display: grid;
+      grid-template-columns: 1fr 375px;
+      min-height: 550px;
+    }
+
+    .avito-feed-mock {
+      background: #F5F5F6;
+      padding: 18px 20px;
+      border-right: 1px solid var(--ui-border);
+    }
+
+    .avito-search-head {
+      background: #FFFFFF;
+      border: 1px solid #E2E5E9;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .avito-crumb {
+      font-size: 12px;
+      color: var(--ui-muted);
+    }
+
+    .avito-feed-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ui-text);
+      margin-top: 2px;
+    }
+
+    .feed-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mock-ad-card {
+      background: #FFFFFF;
+      border: 1px solid #E4E7EC;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .mock-photo {
+      height: 88px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #DBEAFE 0%, #E0E7FF 50%, #F1F5F9 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1E3A8A;
+    }
+
+    .mock-photo.p2 { background: linear-gradient(135deg, #DCFCE7 0%, #DBEAFE 100%); color: #14532D; }
+    .mock-photo.p3 { background: linear-gradient(135deg, #FEF3C7 0%, #E0F2FE 100%); color: #78350F; }
+    .mock-photo.p4 { background: linear-gradient(135deg, #F3E8FF 0%, #DBEAFE 100%); color: #581C87; }
+
+    .mock-ad-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0066CC;
+    }
+
+    .mock-ad-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ui-text);
+    }
+
+    .mock-ad-ppm {
+      font-size: 11.5px;
+      color: var(--ui-muted);
+    }
+
+    .mock-ad-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ui-light);
+      border-top: 1px solid #F1F3F5;
+      padding-top: 6px;
+    }
+
+    /* Боковая панель расширения */
+    .ext-sidepanel {
+      background: #FFFFFF;
+      padding: 14px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      font-size: 12.5px;
+    }
+
+    .sp-header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--ui-border);
+    }
+
+    .sp-counter-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .sp-big-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ui-text);
+    }
+
+    .sp-substats {
+      font-size: 11.5px;
+      color: var(--ui-muted);
+      margin-top: 2px;
+    }
+
+    .sp-job-box {
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      border-radius: 7px;
+      padding: 9px 11px;
+    }
+
+    .sp-job-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0C4A6E;
+    }
+
+    .sp-bar-track {
+      margin-top: 6px;
+      height: 6px;
+      background: #E0F2FE;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .sp-bar-fill {
+      height: 100%;
+      background: var(--brand-blue);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .sp-sec-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ui-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .wl-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 9px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+    }
+
+    .wl-card.highlight-pulse {
+      border-color: var(--brand-blue);
+      background: #F0F9FF;
+    }
+
+    .wl-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ui-text);
+    }
+
+    .wl-sub {
+      font-size: 11px;
+      color: var(--ui-light);
+    }
+
+    .sp-inline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .ui-select, .ui-input {
+      padding: 5px 9px;
+      border: 1px solid #CFD5DD;
+      border-radius: 5px;
+      font-size: 12px;
+      color: var(--ui-text);
+      background: #FFFFFF;
+      font-family: inherit;
+    }
+
+    .ui-btn {
+      border: 1px solid #CFD5DD;
+      background: #FFFFFF;
+      color: var(--ui-text);
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .ui-btn:hover {
+      background: #F3F4F6;
+    }
+
+    .ui-btn.primary {
+      background: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    .ui-btn.primary:hover {
+      background: var(--brand-blue-dark);
+    }
+
+    .ui-btn.outline {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      background: #F8FDFF;
+    }
+
+    /* Полноэкранная таблица недвижимости (Сцены 3, 4, 5) */
+    .crm-workspace {
+      padding: 14px 16px 18px;
+      background: var(--ui-bg);
+      min-height: 550px;
+    }
+
+    .crm-toolbar {
+      background: #FFFFFF;
+      border: 1px solid var(--ui-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .crm-toolbar-left, .crm-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .anti-agent-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .anti-agent-chip.active {
+      background: #ECFDF5;
+      border-color: #34D399;
+      color: #065F46;
+    }
+
+    /* Панель ИИ-скоринга внутри таблицы */
+    .ai-drawer {
+      margin-top: 10px;
+      background: #FFFFFF;
+      border: 1px solid #C7D2FE;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: none;
+    }
+
+    .ai-drawer.open {
+      display: block;
+    }
+
+    .ai-drawer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1.2fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .ai-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 7px;
+      padding: 10px 12px;
+    }
+
+    .ai-box h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1E293B;
+      margin-bottom: 6px;
+    }
+
+    .icebreaker-preview {
+      font-size: 12px;
+      color: #0F172A;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 6px;
+      padding: 8px 10px;
+      line-height: 1.4;
+    }
+
+    /* Таблица */
+    .data-table-wrap {
+      margin-top: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--ui-border);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    table.re-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .re-table thead th {
+      background: var(--brand-blue);
+      color: #FFFFFF;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 9px;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      border-right: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .re-table thead th:hover {
+      background: var(--brand-blue-dark);
+    }
+
+    .re-table tbody td {
+      padding: 7px 9px;
+      border-bottom: 1px solid #EAEEF2;
+      border-right: 1px solid #F3F4F6;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .re-table tbody tr.row-good td {
+      background: #F2FBF5;
+    }
+
+    .re-table tbody tr.row-closed td {
+      background: #F4F5F7;
+      color: #6E7781;
+      font-style: italic;
+    }
+
+    .re-table tbody tr.flash-change td {
+      animation: rowFlash 1.4s ease;
+    }
+
+    @keyframes rowFlash {
+      0% { background: #FEF08A; }
+      100% { background: inherit; }
+    }
+
+    .star-btn {
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      color: #B0B7C3;
+      line-height: 1;
+    }
+
+    .star-btn.starred { color: var(--amber); }
+    .star-btn.grouped:not(.starred) { color: var(--brand-blue); }
+
+    .badge-delta {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .badge-down { background: var(--down-bg); color: var(--down-fg); }
+    .badge-up { background: var(--up-bg); color: var(--up-fg); }
+    .badge-closed { background: #E5E7EB; color: #374151; font-style: normal; }
+
+    .seller-pill {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .seller-owner { background: #DCFCE7; color: #166534; }
+    .seller-agent { background: #FEF3C7; color: #92400E; }
+
+    .ai-score-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .score-high { background: #DCFCE7; color: #15803D; }
+    .score-mid { background: #E0F2FE; color: #0369A1; }
+    .score-low { background: #FEE2E2; color: #B91C1C; }
+
+    /* Сцена 6: Почтовый дайджест + Excel сводка */
+    .digest-layout {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 16px;
+      padding: 16px;
+      background: #F1F5F9;
+      min-height: 550px;
+    }
+
+    .mail-client {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mail-meta-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid #E2E8F0;
+      background: #F8FAFC;
+    }
+
+    .mail-subj {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .mail-from {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #64748B;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .mail-body-inner {
+      padding: 16px 18px;
+      overflow-y: auto;
+    }
+
+    .digest-banner {
+      background: var(--brand-blue);
+      color: #FFFFFF;
+      padding: 11px 14px;
+      border-radius: 7px 7px 0 0;
+    }
+
+    .digest-group-title {
+      margin: 14px 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1F2328;
+      border-left: 3px solid var(--brand-blue);
+      padding-left: 8px;
+    }
+
+    .digest-mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      border: 1px solid #E5E7EB;
+    }
+
+    .digest-mini-table th {
+      background: #F8FAFC;
+      text-align: left;
+      padding: 6px 8px;
+      color: #475569;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .digest-mini-table td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .excel-card {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .xlsx-sheet-preview {
+      border: 1px solid #BBF7D0;
+      background: #F0FDF4;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .xlsx-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 5px 0;
+      border-bottom: 1px dashed #CBD5E1;
+      color: #1E293B;
+    }
+
+    .xlsx-row:last-child { border-bottom: none; }
+
+    /* Нижний титр-суфлёр */
+    .narrator-dock {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      width: min(980px, calc(100% - 32px));
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+      z-index: 45;
+    }
+
+    .narrator-step {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #38BDF8;
+      white-space: nowrap;
+    }
+
+    .narrator-text {
+      flex: 1;
+      font-size: 13.5px;
+      color: #F1F5F9;
+      line-height: 1.4;
+    }
+
+    /* Анимированный демо-курсор */
+    .demo-cursor {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      z-index: 99;
+      transition: top 0.7s cubic-bezier(0.22, 1, 0.36, 1), left 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s;
+      opacity: 0;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+    }
+
+    .demo-cursor.visible {
+      opacity: 1;
+    }
+
+    .cursor-ring {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2.5px solid #38BDF8;
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    .demo-cursor.clicking .cursor-ring {
+      animation: clickPulse 0.55s ease-out;
+    }
+
+    @keyframes clickPulse {
+      0% { opacity: 1; transform: scale(0.4); }
+      100% { opacity: 0; transform: scale(1.65); }
+    }
+
+    .toast-banner {
+      position: fixed;
+      top: 70px;
+      right: 24px;
+      background: #0F172A;
+      color: #FFFFFF;
+      border: 1px solid #38BDF8;
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+      z-index: 60;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .toast-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid, .split-browser, .digest-layout, .ai-drawer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Верхняя панель шоурила и навигации по сценам -->
+  <header class="deck-topbar">
+    <div class="deck-brand">
+      <span class="avito-dots" aria-hidden="true">
+        <i class="dot-b"></i><i class="dot-p"></i><i class="dot-r"></i><i class="dot-g"></i>
+      </span>
+      <div class="deck-title-wrap">
+        <span class="deck-title">AvitoPRO uniexp — Решение для агентства недвижимости</span>
+        <span class="deck-subtitle">Автономный парсинг собственников, мониторинг цен ЖК и Email-аналитика в Chrome</span>
+      </div>
+    </div>
+
+    <nav class="scene-tabs" aria-label="Сцены презентации">
+      <button type="button" class="scene-tab active" data-scene="0">
+        01. Выгоды АН
+        <span class="tab-progress"></span>
+      </button>
+      <button type="button" class="scene-tab" data-scene="1">
+        02. Группы ЖК и сбор
+        <span class="tab-progress"></span>
+      </button>
+      <button type="button" class="scene-tab" data-scene="2">
+        03. Анти-агент и CRM
+        <span class="tab-progress"></span>
+      </button>
+      <button type="button" class="scene-tab" data-scene="3">
+        04. Контроль цен и снятия
+        <span class="tab-progress"></span>
+      </button>
+      <button type="button" class="scene-tab" data-scene="4">
+        05. ИИ-скоринг объектов
+        <span class="tab-progress"></span>
+      </button>
+      <button type="button" class="scene-tab" data-scene="5">
+        06. Email-дайджест и Excel
+        <span class="tab-progress"></span>
+      </button>
+    </nav>
+
+    <div class="deck-controls">
+      <span id="modeBadge" class="mode-pill">Авто-шоурил</span>
+      <button type="button" id="playPauseBtn" class="ctrl-btn primary">❚❚ Пауза</button>
+      <button type="button" id="restartBtn" class="ctrl-btn" title="Запустить показ сначала">↻ Сначала</button>
+    </div>
+  </header>
+
+  <div id="toastBanner" class="toast-banner"></div>
+
+  <!-- Рабочая область сцен -->
+  <main class="stage-wrap">
+
+    <!-- СЦЕНА 1: ОБЗОР РЕШЕНИЯ ДЛЯ АГЕНТСТВА НЕДВИЖИМОСТИ -->
+    <section class="scene-panel active" id="scene-0">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <div>
+            <div class="eyebrow">Локальное расширение Chrome · Без серверов и блокировок</div>
+            <h1 class="hero-h1">
+              Контроль рынка недвижимости, <span>поиск собственников</span> и мгновенные сигналы по ценам
+            </h1>
+            <p class="hero-lead">
+              AvitoPRO uniexp встраивается в штатный браузер брокера или аналитика АН: собирает вторичку, новостройки и коммерцию, отсекает фейки и сетки посредников, круглосуточно отслеживает переоценку и проданные квартиры и присылает сводный дайджест на почту отдела.
+            </p>
+
+            <div class="hero-kpis">
+              <div class="kpi-box">
+                <div class="kpi-val">0 ₽ / мес</div>
+                <div class="kpi-lbl">на серверы и прокси для Авито — работает внутри вашего Chrome + бесплатный Google Apps Script</div>
+              </div>
+              <div class="kpi-box">
+                <div class="kpi-val">₽ и ₽/м²</div>
+                <div class="kpi-lbl">полная история каждой смены цены и сохранение последней цены при снятии объекта с публикации</div>
+              </div>
+              <div class="kpi-box">
+                <div class="kpi-val">6 ИИ-задач</div>
+                <div class="kpi-lbl">скоринг собственника 0–100, поиск обременений в тексте и автогенерация первого сообщения в чат</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button type="button" id="heroStartDemoBtn" class="ctrl-btn primary" style="padding:10px 18px;font-size:13.5px;">
+              ▶ Смотреть интерактивный сценарий
+            </button>
+            <button type="button" id="heroSwitchManualBtn" class="ctrl-btn" style="padding:10px 16px;font-size:13.5px;">
+              Перейти к живому тесту таблицы
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-cards">
+          <div class="value-card">
+            <div class="value-card-head">
+              <h3>1. Набор базы эксклюзивов («Анти-агент»)</h3>
+              <span class="value-tag">Отдел выкупа и набора</span>
+            </div>
+            <p>Автоматический подсчёт объявлений каждого продавца в базе, отсев агентств и частных маклеров, минус-слова («доля», «торги», «аукцион») и карточка CRM прямо в таблице.</p>
+          </div>
+
+          <div class="value-card">
+            <div class="value-card-head">
+              <h3>2. Двухрежимный мониторинг цен конкурентов</h3>
+              <span class="value-tag">Аналитика ЖК и районов</span>
+            </div>
+            <p>Следите одновременно за целыми выборками ЖК/районов по URL и за точечными объектами ★. Любой дисконт или повышение сразу фиксируется в истории цен.</p>
+          </div>
+
+          <div class="value-card">
+            <div class="value-card-head">
+              <h3>3. Реальная цена закрытых сделок</h3>
+              <span class="value-tag">Оценка ликвидности</span>
+            </div>
+            <p>Когда квартира продана и Авито скрывает цену на закрытой карточке, расширение не затирает её нулём, а сохраняет последнюю экспозиционную цену и присылает уведомление.</p>
+          </div>
+
+          <div class="value-card">
+            <div class="value-card-head">
+              <h3>4. Безопасность аккаунта Авито</h3>
+              <span class="value-tag">Human-like режим</span>
+            </div>
+            <p>Никакого автооткрытия телефонов, плавные паузы с джиттером, чтение готового SSR-состояния страницы и умная авто-пауза при появлении капчи.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЦЕНА 2: ВЫДАЧА АВИТО И БОКОВАЯ ПАНЕЛЬ МОНИТОРИНГА -->
+    <section class="scene-panel" id="scene-1">
+      <div class="browser-window">
+        <div class="browser-bar">
+          <div class="win-dots"><span class="wd-r"></span><span class="wd-y"></span><span class="wd-g"></span></div>
+          <div class="address-bar">
+            <span>https://www.avito.ru/moskva/kvartiry/prodam/vtorichka?f=ASgBAQICAUSSA8YQ</span>
+            <span style="color:#16A34A;font-weight:600;">SSR JSON перехвачен</span>
+          </div>
+          <span class="ext-badge">AvitoPRO uniexp · Боковая панель</span>
+        </div>
+
+        <div class="split-browser">
+          <!-- Левая часть: Имитация открытой выдачи недвижимости -->
+          <div class="avito-feed-mock">
+            <div class="avito-search-head">
+              <div>
+                <div class="avito-crumb">Недвижимость · Квартиры · Купить · Вторичка и бизнес-класс</div>
+                <div class="avito-feed-title">Продажа квартир — найдено 1 420 объявлений</div>
+              </div>
+              <span class="seller-pill seller-owner">Фоновая вкладка не мешает работе</span>
+            </div>
+
+            <div class="feed-cards-grid">
+              <div class="mock-ad-card">
+                <div class="mock-photo"><span>ЖК «Символ» · 14/24 эт.</span><span>12 фото</span></div>
+                <div class="mock-ad-title">2-к. квартира, 58,4 м², европланировка</div>
+                <div class="mock-ad-price">19 850 000 ₽</div>
+                <div class="mock-ad-ppm">339 897 ₽/м² · м. Площадь Ильича (7 мин)</div>
+                <div class="mock-ad-meta"><span>Частное лицо (1 объявл.)</span><span>Сегодня 11:20</span></div>
+              </div>
+
+              <div class="mock-ad-card">
+                <div class="mock-photo p2"><span>ЖК «ЗИЛАРТ» · 9/16 эт.</span><span>18 фото</span></div>
+                <div class="mock-ad-title">3-к. квартира, 82 м², мастер-спальня</div>
+                <div class="mock-ad-price">31 900 000 ₽</div>
+                <div class="mock-ad-ppm">389 024 ₽/м² · м. ЗИЛ (5 мин)</div>
+                <div class="mock-ad-meta"><span>АН «Премиум Риелти» (34 объявл.)</span><span>Вчера 18:45</span></div>
+              </div>
+
+              <div class="mock-ad-card">
+                <div class="mock-photo p3"><span>Академический р-н · 6/9 эт.</span><span>9 фото</span></div>
+                <div class="mock-ad-title">2-к. квартира, 54 м², кирпичный дом</div>
+                <div class="mock-ad-price">16 400 000 ₽</div>
+                <div class="mock-ad-ppm">303 704 ₽/м² · м. Академическая (6 мин)</div>
+                <div class="mock-ad-meta"><span>Частное лицо (1 объявл.)</span><span>Сегодня 09:12</span></div>
+              </div>
+
+              <div class="mock-ad-card">
+                <div class="mock-photo p4"><span>Пресненский р-н · 19/32 эт.</span><span>15 фото</span></div>
+                <div class="mock-ad-title">Евро-2, 46,5 м², панорамный вид</div>
+                <div class="mock-ad-price">22 100 000 ₽</div>
+                <div class="mock-ad-ppm">475 269 ₽/м² · м. Шелепиха (4 мин)</div>
+                <div class="mock-ad-meta"><span>АН «Сити Брокер» (19 объявл.)</span><span>2 дня назад</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая часть: Реальная вёрстка боковой панели AvitoPRO -->
+          <aside class="ext-sidepanel">
+            <div class="sp-header">
+              <div style="display:flex;align-items:center;gap:6px;font-weight:700;">
+                <span class="avito-dots"><i class="dot-b"></i><i class="dot-p"></i><i class="dot-r"></i><i class="dot-g"></i></span>
+                <span>AvitoPRO uniexp</span>
+              </div>
+              <div class="sp-counter-row">
+                <span id="spTotalCounter" class="sp-big-num">148</span>
+                <span style="color:var(--ui-muted);">объектов в базе</span>
+              </div>
+              <div class="sp-substats">
+                догружено: <strong>96</strong> · слежка: <strong id="spWatchedStat">64</strong> · изм. цен: <strong id="spChangedStat">4</strong>
+              </div>
+            </div>
+
+            <div class="sp-job-box">
+              <div id="spJobText" class="sp-job-title">Готов к фоновому обходу групп ЖК</div>
+              <div class="sp-bar-track"><div id="spJobBar" class="sp-bar-fill" style="width: 100%"></div></div>
+              <div id="spJobSub" style="font-size:11px;color:#475569;margin-top:4px;">Пауза с джиттером 3000–4500 мс · без открытия телефонов</div>
+            </div>
+
+            <div class="sp-sec-title">МОНИТОРИНГ ЦЕН И УВЕДОМЛЕНИЯ</div>
+
+            <label style="display:flex;align-items:center;gap:7px;cursor:pointer;">
+              <input type="checkbox" id="spAutoAlarmChk" checked>
+              <span>Автопроверка по расписанию (<code>chrome.alarms</code>)</span>
+            </label>
+
+            <div class="sp-inline">
+              <span>Интервал проверки</span>
+              <select id="spIntervalSelect" class="ui-select">
+                <option value="60">Каждый 1 час</option>
+                <option value="180" selected>Каждые 3 часа</option>
+                <option value="360">Каждые 6 часов</option>
+                <option value="720">Каждые 12 часов</option>
+              </select>
+            </div>
+
+            <div id="spWatchlistBox" style="display:flex;flex-direction:column;gap:6px;">
+              <div class="wl-card">
+                <div>
+                  <div class="wl-title">✓ ЖК Бизнес-класс (Юг / Центр)</div>
+                  <div class="wl-sub">ссылок: 3 · до 3 стр. · 42 объекта</div>
+                </div>
+                <span class="seller-pill seller-owner">Активна</span>
+              </div>
+              <div class="wl-card">
+                <div>
+                  <div class="wl-title">✓ Вторичка 2–3к (Академический)</div>
+                  <div class="wl-sub">ссылок: 2 · до 2 стр. · 18 объектов</div>
+                </div>
+                <span class="seller-pill seller-owner">Активна</span>
+              </div>
+              <div id="addedWlCard" class="wl-card highlight-pulse" style="display:none;">
+                <div>
+                  <div class="wl-title">✓ Витрина конкурента «Премиум Риелти»</div>
+                  <div class="wl-sub">ссылок: 1 · до 4 стр. · профиль АН</div>
+                </div>
+                <span class="seller-pill seller-owner">Добавлена</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button type="button" id="spAddCurrentTabBtn" class="ui-btn">+ Группа из вкладки</button>
+              <button type="button" id="spRunWatchBtn" class="ui-btn outline">Проверить сейчас</button>
+            </div>
+
+            <div style="border-top:1px solid var(--ui-border);padding-top:9px;margin-top:auto;">
+              <div style="font-size:11px;color:var(--ui-muted);margin-bottom:6px;">
+                Webhook Google Apps Script: <strong style="color:#15803D;">подключён (otdel@realty.ru)</strong>
+              </div>
+              <button type="button" id="spOpenTableBtn" class="ui-btn primary" style="width:100%;">
+                Открыть полноэкранную таблицу объектов →
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЦЕНЫ 3, 4, 5: ИНТЕРАКТИВНАЯ ТАБЛИЦА НЕДВИЖИМОСТИ, КОНТРОЛЬ ЦЕН И ИИ -->
+    <section class="scene-panel" id="scene-crm">
+      <div class="browser-window">
+        <div class="browser-bar">
+          <div class="win-dots"><span class="wd-r"></span><span class="wd-y"></span><span class="wd-g"></span></div>
+          <div class="address-bar">
+            <span>chrome-extension://avitopro-uniexp/table/table.html</span>
+            <span>Набор колонок: <strong>Мониторинг цен + Недвижимость (₽/м²)</strong></span>
+          </div>
+          <span class="ext-badge">Локальная база CRM</span>
+        </div>
+
+        <div class="crm-workspace">
+          <div class="crm-toolbar">
+            <div class="crm-toolbar-left">
+              <select id="reSegmentFilter" class="ui-select" aria-label="Фильтр сегмента">
+                <option value="all">Все группы и запросы (8)</option>
+                <option value="ЖК Бизнес-класс">ЖК Бизнес-класс</option>
+                <option value="Вторичка 2–3к">Вторичка 2–3к</option>
+                <option value="Коммерция стрит-ритейл">Коммерция стрит-ритейл</option>
+              </select>
+
+              <select id="reWatchFilter" class="ui-select" aria-label="Фильтр мониторинга">
+                <option value="all">Мониторинг: все</option>
+                <option value="watched">★ В мониторинге</option>
+                <option value="changed">Изм. цена (дисконт / рост)</option>
+                <option value="closed">Снятые / проданные</option>
+              </select>
+
+              <input type="search" id="reSearchInput" class="ui-input" placeholder="Поиск по ЖК, метро, описанию..." style="width:210px;">
+
+              <button type="button" id="antiAgentBtn" class="anti-agent-chip" title="Фильтр перекупов и риелторов: скрыть продавцов с > 2 объектами в базе">
+                <span>Анти-агент (только собственники ≤ 2 объявл.)</span>
+              </button>
+            </div>
+
+            <div class="crm-toolbar-right">
+              <button type="button" id="simulateMarketBtn" class="ui-btn outline">
+                ↻ Симулировать смену цен / закрытие
+              </button>
+              <button type="button" id="toggleAiPanelBtn" class="ui-btn">
+                ✦ ИИ-скоринг и чат
+              </button>
+              <button type="button" id="goDigestBtn" class="ui-btn primary">
+                Письмо руководителю →
+              </button>
+            </div>
+          </div>
+
+          <!-- Выдвижная панель ИИ-анализа (Сцена 5) -->
+          <div id="reAiDrawer" class="ai-drawer">
+            <div class="ai-drawer-grid">
+              <div class="ai-box">
+                <h4>1. Критерий ИИ-отбора для отдела набора</h4>
+                <p style="font-size:12px;color:#475569;line-height:1.4;">
+                  «Прямой собственник без комиссии, свободная продажа, полная стоимость в ДКП, цена ниже или в рынке ЖК, без долей и торгов».
+                </p>
+                <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+                  <button type="button" id="runAiDemoBtn" class="ui-btn primary">Пересчитать ИИ-оценку</button>
+                  <span id="aiStatusNote" style="font-size:11.5px;color:#15803D;font-weight:600;">Оценено 8 объектов</span>
+                </div>
+              </div>
+
+              <div class="ai-box">
+                <h4>2. Выявление рисков и скрытых агентов</h4>
+                <p style="font-size:12px;color:#475569;line-height:1.4;">
+                  ИИ сверяет текст с количеством объявлений продавца: ловит фразы <em>«помощь в одобрении», «ключи у агента», «альтернатива не подобрана»</em>.
+                </p>
+              </div>
+
+              <div class="ai-box">
+                <h4>3. Первое сообщение собственнику в чат Авито</h4>
+                <div id="icebreakerBox" class="icebreaker-preview">
+                  «Здравствуйте, Алексей! Увидел вашу 2-к квартиру 58,4 м² в ЖК Символ. У нас прямые покупатели с одобренной ипотекой по этому корпусу — подскажите, полная сумма в ДКП и когда удобно показать объект?»
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Таблица объектов -->
+          <div class="data-table-wrap">
+            <table class="re-table">
+              <thead>
+                <tr>
+                  <th data-sort="isWatched">★</th>
+                  <th data-sort="title">Объект / ЖК / Метро</th>
+                  <th data-sort="price">Цена сейчас, ₽</th>
+                  <th data-sort="ppm">Цена за м²</th>
+                  <th data-sort="prevPrice">Пред. цена</th>
+                  <th data-sort="priceDelta">Изменение ₽ / %</th>
+                  <th data-sort="status">Статус Авито</th>
+                  <th data-sort="sellerAds">Продавец (объявл.)</th>
+                  <th data-sort="aiScore">ИИ-скоринг</th>
+                  <th>Статус CRM</th>
+                </tr>
+              </thead>
+              <tbody id="reTableBody"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:11.5px;color:var(--ui-muted);flex-wrap:wrap;gap:8px;">
+            <span id="reCounterLine">Показано 8 из 8 объектов · Наведите на цену, чтобы увидеть полную цепочку истории цен</span>
+            <span>Кликните ★ слева от любой квартиры или переключите статус CRM — всё интерактивно</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЦЕНА 6: EMAIL-ДАЙДЖЕСТ GOOGLE APPS SCRIPT И EXCEL-СВОДКА -->
+    <section class="scene-panel" id="scene-5">
+      <div class="browser-window">
+        <div class="browser-bar">
+          <div class="win-dots"><span class="wd-r"></span><span class="wd-y"></span><span class="wd-g"></span></div>
+          <div class="address-bar">
+            <span>Почта отдела продаж и аналитики · Автоматический дайджест AvitoPRO uniexp</span>
+            <span style="color:#15803D;font-weight:600;">Google Apps Script (/exec)</span>
+          </div>
+          <span class="ext-badge">0 ₽ за отправку писем</span>
+        </div>
+
+        <div class="digest-layout">
+          <!-- Левая колонка: Реальное HTML-письмо из shared/email-notifier.js -->
+          <div class="mail-client">
+            <div class="mail-meta-head">
+              <div id="digestSubjectLine" class="mail-subj">
+                [AvitoPRO] Изменения (4): ▼ снижений: 2, ▲ повышений: 1, снято/закрыто: 1
+              </div>
+              <div class="mail-from">
+                <span>От: <strong>AvitoPRO Monitor (ваш корпоративный Gmail)</strong> → Кому: <strong>rop@agency.ru, brokers@agency.ru</strong></span>
+                <span>Автопроверка по расписанию</span>
+              </div>
+            </div>
+
+            <div class="mail-body-inner">
+              <div class="digest-banner">
+                <div style="font-size:14.5px;font-weight:700;">AvitoPRO uniexp — Мониторинг цен конкурентов и собственников</div>
+                <div id="digestSubBanner" style="font-size:11.5px;opacity:0.92;margin-top:2px;">
+                  Единая сводка по итогам фонового обхода (без спама одиночными письмами)
+                </div>
+              </div>
+
+              <div id="digestTablesContainer"></div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: Выгрузка в Excel (.xlsx) со сводкой рынка -->
+          <div class="excel-card">
+            <div>
+              <div class="sp-sec-title">ГОТОВАЯ АНАЛИТИКА ДЛЯ КЛИЕНТА И РОПа</div>
+              <h3 style="font-size:16px;color:#0F172A;margin-top:6px;">Оформленный отчёт Excel (.xlsx) в 1 клик</h3>
+              <p style="font-size:12.5px;color:#475569;margin-top:6px;line-height:1.45;">
+                Помимо мгновенных писем, брокер выгружает клиенту убедительное обоснование рыночной цены с листом <strong>«Сводка»</strong> (мин / средняя / медиана / макс по району) и отдельными вкладками на каждый ЖК.
+              </p>
+
+              <div class="xlsx-sheet-preview">
+                <div style="font-size:11.5px;font-weight:700;color:#166534;margin-bottom:6px;">
+                  Лист 1: «Сводка по сегментам» (авторасчёт)
+                </div>
+                <div class="xlsx-row"><span>ЖК Бизнес-класс (медиана)</span><strong>24 900 000 ₽ (372 тыс. ₽/м²)</strong></div>
+                <div class="xlsx-row"><span>Вторичка 2–3к (медиана)</span><strong>16 400 000 ₽ (304 тыс. ₽/м²)</strong></div>
+                <div class="xlsx-row"><span>Коммерция стрит-ритейл</span><strong>41 500 000 ₽ (441 тыс. ₽/м²)</strong></div>
+                <div class="xlsx-row"><span>Средний дисконт за 14 дней</span><strong style="color:#15803D;">▼ −3,6% (−680 000 ₽)</strong></div>
+                <div class="xlsx-row"><span>Закрыто / продано за неделю</span><strong>1 объект (цена сохранена)</strong></div>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+              <button type="button" id="downloadDemoCsvBtn" class="ui-btn primary" style="padding:9px 14px;text-align:center;">
+                Скачать демо-выгрузку таблицы (.csv для Excel)
+              </button>
+              <button type="button" id="backToTableBtn" class="ui-btn" style="text-align:center;">
+                ← Вернуться в интерактивную таблицу объектов
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Нижний титр-комментатор -->
+  <footer class="narrator-dock">
+    <span id="narratorStepLabel" class="narrator-step">Сцена 1 / 6</span>
+    <p id="narratorText" class="narrator-text">
+      Обзор возможностей AvitoPRO uniexp для агентства недвижимости: набор эксклюзивов от собственников и круглосуточный контроль цен конкурентов.
+    </p>
+    <button type="button" id="nextSceneBtn" class="ctrl-btn">Далее →</button>
+  </footer>
+
+  <!-- Анимированный демо-курсор для авто-шоурила -->
+  <div id="demoCursor" class="demo-cursor" aria-hidden="true">
+    <div class="cursor-ring"></div>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M4 2L20 10.5L12.2 12.8L9.5 20.5L4 2Z" fill="#0099F7" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <script>
+    (function () {
+      const CRM_STATUSES = ['Новое', 'Позвонить', 'Написать', 'Осмотр', 'Торг', 'Эксклюзив/Договор', 'Отказ'];
+
+      const initialListings = [
+        {
+          id: 're_101',
+          isWatched: true,
+          inGroup: true,
+          segment: 'ЖК Бизнес-класс',
+          title: '2-к. кв., 58,4 м², 14/24 эт. · ЖК «Символ»',
+          area: 58.4,
+          price: 19850000,
+          initialPrice: 20600000,
+          prevPrice: 20600000,
+          priceDelta: -750000,
+          priceDeltaPct: -3.64,
+          history: '03.11: 20 600 000 ₽ → 17.11: 19 850 000 ₽',
+          status: 'активно',
+          sellerName: 'Алексей (собственник)',
+          sellerType: 'private',
+          sellerAds: 1,
+          aiScore: 95,
+          aiNote: 'Прямой собственник, дисконт −750 тыс. ₽, полная в ДКП',
+          crm: 'Позвонить',
+          icebreaker: 'Здравствуйте, Алексей! Увидел снижение цены по вашей 2-к квартире 58,4 м² в ЖК «Символ». У нас есть прямой покупатель по этому корпусу — подскажите, полная стоимость в ДКП и удобно ли показать завтра?'
+        },
+        {
+          id: 're_102',
+          isWatched: true,
+          inGroup: true,
+          segment: 'ЖК Бизнес-класс',
+          title: '3-к. кв., 82,0 м², 9/16 эт. · ЖК «ЗИЛАРТ»',
+          area: 82.0,
+          price: 31900000,
+          initialPrice: 31900000,
+          prevPrice: 0,
+          priceDelta: 0,
+          priceDeltaPct: 0,
+          history: '12.11: 31 900 000 ₽',
+          status: 'активно',
+          sellerName: 'АН «Премиум Риелти»',
+          sellerType: 'agency',
+          sellerAds: 34,
+          aiScore: 64,
+          aiNote: 'Эксклюзив конкурента, цена на 4% выше медианы корпуса',
+          crm: 'Новое',
+          icebreaker: 'Добрый день! Интересует лот 82 м² в ЗИЛАРТе для нашего клиента, готовы ли к совместной сделке и обсуждается ли торг?'
+        },
+        {
+          id: 're_103',
+          isWatched: false,
+          inGroup: true,
+          segment: 'Вторичка 2–3к',
+          title: '2-к. кв., 54,0 м², 6/9 эт. · м. Академическая',
+          area: 54.0,
+          price: 16400000,
+          initialPrice: 16400000,
+          prevPrice: 0,
+          priceDelta: 0,
+          priceDeltaPct: 0,
+          history: '16.11: 16 400 000 ₽',
+          status: 'активно',
+          sellerName: 'Ирина В.',
+          sellerType: 'private',
+          sellerAds: 1,
+          aiScore: 91,
+          aiNote: 'Собственник, 1 взрослый владелец, без обременений',
+          crm: 'Написать',
+          icebreaker: 'Здравствуйте, Ирина! Подбираем 2-комнатную в кирпичном доме у м. Академическая. Подскажите, у вас свободная продажа или альтернатива?'
+        },
+        {
+          id: 're_104',
+          isWatched: true,
+          inGroup: true,
+          segment: 'Вторичка 2–3к',
+          title: '1-к. кв., 41,2 м², 8/14 эт. · м. Профсоюзная',
+          area: 41.2,
+          price: 12900000,
+          initialPrice: 13400000,
+          prevPrice: 13400000,
+          priceDelta: -500000,
+          priceDeltaPct: -3.73,
+          history: '01.11: 13 400 000 ₽ → 14.11: 12 900 000 ₽ → 17.11: снято',
+          status: 'снято',
+          sellerName: 'АН «Городской Квартал»',
+          sellerType: 'agency',
+          sellerAds: 22,
+          aiScore: 72,
+          aiNote: 'Снято/продано после уценки до 12,9 млн ₽ (цена сохранена)',
+          crm: 'Отказ',
+          icebreaker: ''
+        },
+        {
+          id: 're_105',
+          isWatched: true,
+          inGroup: false,
+          segment: 'Коммерция стрит-ритейл',
+          title: 'Торговое ПСН, 94,0 м², 1 этаж · 1-я линия',
+          area: 94.0,
+          price: 41500000,
+          initialPrice: 39900000,
+          prevPrice: 39900000,
+          priceDelta: 1600000,
+          priceDeltaPct: 4.01,
+          history: '05.11: 39 900 000 ₽ → 17.11: 41 500 000 ₽',
+          status: 'активно',
+          sellerName: 'ИП Смирнов Д.А.',
+          sellerType: 'private',
+          sellerAds: 2,
+          aiScore: 88,
+          aiNote: 'Собственник помещения, сетевой арендатор, окупаемость ~9,5 лет',
+          crm: 'Торг',
+          icebreaker: 'Добрый день! Рассматриваем ваше ПСН 94 м² под покупку инвестору. Подскажите текущий МАП по договору аренды и условия индексации?'
+        },
+        {
+          id: 're_106',
+          isWatched: false,
+          inGroup: false,
+          segment: 'Вторичка 2–3к',
+          title: '3-к. кв., 74,5 м², 4/12 эт. · м. Ленинский пр-т',
+          area: 74.5,
+          price: 23700000,
+          initialPrice: 23700000,
+          prevPrice: 0,
+          priceDelta: 0,
+          priceDeltaPct: 0,
+          history: '15.11: 23 700 000 ₽',
+          status: 'активно',
+          sellerName: 'Частный маклер Сергей',
+          sellerType: 'agency',
+          sellerAds: 14,
+          aiScore: 29,
+          aiNote: 'Скрытый посредник (14 объектов в базе, дубли фотографий)',
+          crm: 'Отказ',
+          icebreaker: ''
+        },
+        {
+          id: 're_107',
+          isWatched: true,
+          inGroup: true,
+          segment: 'ЖК Бизнес-класс',
+          title: 'Евро-2, 46,5 м², 19/32 эт. · ЖК «Сердце Столицы»',
+          area: 46.5,
+          price: 24900000,
+          initialPrice: 25800000,
+          prevPrice: 25800000,
+          priceDelta: -900000,
+          priceDeltaPct: -3.49,
+          history: '08.11: 25 800 000 ₽ → 17.11: 24 900 000 ₽',
+          status: 'активно',
+          sellerName: 'Мария (собственник)',
+          sellerType: 'private',
+          sellerAds: 1,
+          aiScore: 93,
+          aiNote: 'Срочная продажа от собственника, видовой этаж, ключи на руках',
+          crm: 'Осмотр',
+          icebreaker: 'Мария, здравствуйте! Видим актуальную цену 24,9 млн ₽ по вашей Евро-2 в «Сердце Столицы». Готовы оперативно выйти на задаток — когда возможен показ?'
+        },
+        {
+          id: 're_108',
+          isWatched: false,
+          inGroup: true,
+          segment: 'ЖК Бизнес-класс',
+          title: 'Студия, 31,0 м², 11/28 эт. · ЖК «Павелецкая Сити»',
+          area: 31.0,
+          price: 15200000,
+          initialPrice: 15200000,
+          prevPrice: 0,
+          priceDelta: 0,
+          priceDeltaPct: 0,
+          history: '16.11: 15 200 000 ₽',
+          status: 'активно',
+          sellerName: 'АН «Сити Брокер»',
+          sellerType: 'agency',
+          sellerAds: 19,
+          aiScore: 58,
+          aiNote: 'Объект агентства, переуступка ДДУ',
+          crm: 'Новое',
+          icebreaker: ''
+        }
+      ];
+
+      let listings = initialListings.map((x) => ({ ...x }));
+      let onlyOwnersFilter = false;
+      let sortKey = '';
+      let sortDir = 'desc';
+      let marketSimulatedOnce = false;
+
+      // Состояние шоурила
+      let currentSceneIdx = 0;
+      let isAutoPlaying = true;
+      let sceneTimer = null;
+      let progressInterval = null;
+      let stepTimers = [];
+
+      const els = {
+        sceneTabs: [...document.querySelectorAll('.scene-tab')],
+        modeBadge: document.getElementById('modeBadge'),
+        playPauseBtn: document.getElementById('playPauseBtn'),
+        restartBtn: document.getElementById('restartBtn'),
+        nextSceneBtn: document.getElementById('nextSceneBtn'),
+        narratorStepLabel: document.getElementById('narratorStepLabel'),
+        narratorText: document.getElementById('narratorText'),
+        demoCursor: document.getElementById('demoCursor'),
+        toastBanner: document.getElementById('toastBanner'),
+
+        scene0: document.getElementById('scene-0'),
+        scene1: document.getElementById('scene-1'),
+        sceneCrm: document.getElementById('scene-crm'),
+        scene5: document.getElementById('scene-5'),
+
+        heroStartDemoBtn: document.getElementById('heroStartDemoBtn'),
+        heroSwitchManualBtn: document.getElementById('heroSwitchManualBtn'),
+
+        spTotalCounter: document.getElementById('spTotalCounter'),
+        spWatchedStat: document.getElementById('spWatchedStat'),
+        spChangedStat: document.getElementById('spChangedStat'),
+        spJobText: document.getElementById('spJobText'),
+        spJobBar: document.getElementById('spJobBar'),
+        spJobSub: document.getElementById('spJobSub'),
+        addedWlCard: document.getElementById('addedWlCard'),
+        spAddCurrentTabBtn: document.getElementById('spAddCurrentTabBtn'),
+        spRunWatchBtn: document.getElementById('spRunWatchBtn'),
+        spOpenTableBtn: document.getElementById('spOpenTableBtn'),
+
+        reSegmentFilter: document.getElementById('reSegmentFilter'),
+        reWatchFilter: document.getElementById('reWatchFilter'),
+        reSearchInput: document.getElementById('reSearchInput'),
+        antiAgentBtn: document.getElementById('antiAgentBtn'),
+        simulateMarketBtn: document.getElementById('simulateMarketBtn'),
+        toggleAiPanelBtn: document.getElementById('toggleAiPanelBtn'),
+        goDigestBtn: document.getElementById('goDigestBtn'),
+        reAiDrawer: document.getElementById('reAiDrawer'),
+        runAiDemoBtn: document.getElementById('runAiDemoBtn'),
+        aiStatusNote: document.getElementById('aiStatusNote'),
+        icebreakerBox: document.getElementById('icebreakerBox'),
+        reTableBody: document.getElementById('reTableBody'),
+        reCounterLine: document.getElementById('reCounterLine'),
+
+        digestSubjectLine: document.getElementById('digestSubjectLine'),
+        digestTablesContainer: document.getElementById('digestTablesContainer'),
+        downloadDemoCsvBtn: document.getElementById('downloadDemoCsvBtn'),
+        backToTableBtn: document.getElementById('backToTableBtn')
+      };
+
+      function showToast(msg) {
+        els.toastBanner.textContent = msg;
+        els.toastBanner.classList.add('show');
+        setTimeout(() => els.toastBanner.classList.remove('show'), 2600);
+      }
+
+      function fmtNum(n) {
+        return Number(n || 0).toLocaleString('ru-RU');
+      }
+
+      function calcPpm(item) {
+        return Math.round(item.price / item.area);
+      }
+
+      function getFilteredListings() {
+        const seg = els.reSegmentFilter.value;
+        const wMode = els.reWatchFilter.value;
+        const q = els.reSearchInput.value.trim().toLowerCase();
+
+        let res = listings.filter((it) => {
+          if (seg !== 'all' && it.segment !== seg) return false;
+          if (wMode === 'watched' && !it.isWatched && !it.inGroup) return false;
+          if (wMode === 'changed' && it.priceDelta === 0) return false;
+          if (wMode === 'closed' && it.status !== 'снято') return false;
+          if (onlyOwnersFilter && it.sellerAds > 2) return false;
+          if (q) {
+            const hay = `${it.title} ${it.segment} ${it.sellerName} ${it.aiNote}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+
+        if (sortKey) {
+          const dir = sortDir === 'asc' ? 1 : -1;
+          res.sort((a, b) => {
+            const va = sortKey === 'ppm' ? calcPpm(a) : a[sortKey];
+            const vb = sortKey === 'ppm' ? calcPpm(b) : b[sortKey];
+            if (typeof va === 'number' || typeof va === 'boolean') {
+              return ((Number(va) || 0) - (Number(vb) || 0)) * dir;
+            }
+            return String(va).localeCompare(String(vb), 'ru') * dir;
+          });
+        }
+        return res;
+      }
+
+      function renderCrmTable(flashIds = []) {
+        const rows = getFilteredListings();
+        const flashSet = new Set(flashIds);
+        els.reTableBody.innerHTML = '';
+
+        for (const item of rows) {
+          const tr = document.createElement('tr');
+          if (item.status === 'снято') tr.classList.add('row-closed');
+          else if (item.priceDelta < 0 || item.aiScore >= 90) tr.classList.add('row-good');
+          if (flashSet.has(item.id)) tr.classList.add('flash-change');
+
+          // 1. Star
+          const tdStar = document.createElement('td');
+          const starBtn = document.createElement('button');
+          starBtn.type = 'button';
+          starBtn.id = `star-${item.id}`;
+          starBtn.className = `star-btn${item.isWatched ? ' starred' : ''}${item.inGroup ? ' grouped' : ''}`;
+          starBtn.textContent = item.isWatched ? '★' : (item.inGroup ? '◈' : '☆');
+          starBtn.title = item.isWatched
+            ? 'Точечный контроль включён'
+            : (item.inGroup ? 'Входит в группу ЖК (нажмите для ★)' : 'Поставить на точечный контроль');
+          starBtn.addEventListener('click', () => {
+            item.isWatched = !item.isWatched;
+            renderCrmTable();
+            renderDigestEmail();
+          });
+          tdStar.appendChild(starBtn);
+          tr.appendChild(tdStar);
+
+          // 2. Title
+          const tdTitle = document.createElement('td');
+          tdTitle.innerHTML = `<div style="font-weight:700;color:#0F172A;">${item.title}</div><div style="font-size:11px;color:#64748B;">${item.segment}</div>`;
+          tdTitle.style.cursor = 'pointer';
+          tdTitle.addEventListener('click', () => {
+            if (item.icebreaker) {
+              els.icebreakerBox.textContent = `«${item.icebreaker}»`;
+              els.reAiDrawer.classList.add('open');
+            }
+          });
+          tr.appendChild(tdTitle);
+
+          // 3. Price
+          const tdPrice = document.createElement('td');
+          tdPrice.style.fontWeight = '700';
+          tdPrice.textContent = `${fmtNum(item.price)} ₽`;
+          tdPrice.title = `История цен: ${item.history}`;
+          tr.appendChild(tdPrice);
+
+          // 4. Price per m2
+          const tdPpm = document.createElement('td');
+          tdPpm.textContent = `${fmtNum(calcPpm(item))} ₽/м²`;
+          tr.appendChild(tdPpm);
+
+          // 5. Prev price
+          const tdPrev = document.createElement('td');
+          tdPrev.style.color = '#64748B';
+          tdPrev.textContent = item.prevPrice > 0 ? `${fmtNum(item.prevPrice)} ₽` : '—';
+          tr.appendChild(tdPrev);
+
+          // 6. Delta
+          const tdDelta = document.createElement('td');
+          if (item.priceDelta === 0) {
+            tdDelta.textContent = '—';
+          } else {
+            const isDown = item.priceDelta < 0;
+            const sign = isDown ? '−' : '+';
+            const arrow = isDown ? '▼' : '▲';
+            const span = document.createElement('span');
+            span.className = `badge-delta ${isDown ? 'badge-down' : 'badge-up'}`;
+            span.textContent = `${arrow} ${sign}${fmtNum(Math.abs(item.priceDelta))} ₽ (${sign}${Math.abs(item.priceDeltaPct).toFixed(1)}%)`;
+            tdDelta.appendChild(span);
+          }
+          tr.appendChild(tdDelta);
+
+          // 7. Status
+          const tdStatus = document.createElement('td');
+          if (item.status === 'снято') {
+            tdStatus.innerHTML = `<span class="badge-delta badge-closed" title="Авито скрыл цену, сохранена последняя экспозиционная цена">снято (цена сохр.)</span>`;
+          } else {
+            tdStatus.textContent = 'активно';
+          }
+          tr.appendChild(tdStatus);
+
+          // 8. Seller
+          const tdSeller = document.createElement('td');
+          const isOwner = item.sellerAds <= 2;
+          tdSeller.innerHTML = `<div>${item.sellerName}</div><span class="seller-pill ${isOwner ? 'seller-owner' : 'seller-agent'}">${isOwner ? 'Собственник' : 'Агентство / маклер'}: ${item.sellerAds} объявл.</span>`;
+          tr.appendChild(tdSeller);
+
+          // 9. AI score
+          const tdAi = document.createElement('td');
+          const sCls = item.aiScore >= 85 ? 'score-high' : (item.aiScore >= 60 ? 'score-mid' : 'score-low');
+          tdAi.innerHTML = `<span class="ai-score-pill ${sCls}">${item.aiScore}/100</span><div style="font-size:10.5px;color:#64748B;max-width:210px;overflow:hidden;text-overflow:ellipsis;" title="${item.aiNote}">${item.aiNote}</div>`;
+          tr.appendChild(tdAi);
+
+          // 10. CRM status
+          const tdCrm = document.createElement('td');
+          const sel = document.createElement('select');
+          sel.className = 'ui-select';
+          for (const st of CRM_STATUSES) {
+            const o = document.createElement('option');
+            o.value = st;
+            o.textContent = st;
+            sel.appendChild(o);
+          }
+          sel.value = item.crm;
+          sel.addEventListener('change', () => {
+            item.crm = sel.value;
+            showToast(`Статус CRM сохранён: «${sel.value}»`);
+          });
+          tdCrm.appendChild(sel);
+          tr.appendChild(tdCrm);
+
+          els.reTableBody.appendChild(tr);
+        }
+
+        els.reCounterLine.textContent = `Показано ${rows.length} из ${listings.length} объектов · Наведите курсор на цену для просмотра истории изменений`;
+      }
+
+      function renderDigestEmail() {
+        const changedOrClosed = listings.filter((it) => it.priceDelta !== 0 || it.status === 'снято');
+        const downs = changedOrClosed.filter((it) => it.priceDelta < 0 && it.status !== 'снято').length;
+        const ups = changedOrClosed.filter((it) => it.priceDelta > 0 && it.status !== 'снято').length;
+        const closed = changedOrClosed.filter((it) => it.status === 'снято').length;
+
+        els.digestSubjectLine.textContent = `[AvitoPRO] Изменения (${changedOrClosed.length}): ▼ снижений: ${downs}, ▲ повышений: ${ups}, снято/закрыто: ${closed}`;
+
+        const groupsMap = new Map();
+        for (const it of changedOrClosed) {
+          const g = it.inGroup ? it.segment : 'Точечный контроль (★)';
+          if (!groupsMap.has(g)) groupsMap.set(g, []);
+          groupsMap.get(g).push(it);
+        }
+
+        let html = '';
+        for (const [gName, items] of groupsMap.entries()) {
+          let rowsHtml = '';
+          for (const it of items) {
+            let priceCell = '';
+            let badgeCell = '';
+            if (it.status === 'снято') {
+              priceCell = `<span style="color:#64748B;">Последняя цена: <strong>${fmtNum(it.price)} ₽</strong> (${fmtNum(calcPpm(it))} ₽/м²)</span>`;
+              badgeCell = `<span class="badge-delta badge-closed">Снято / продано</span>`;
+            } else {
+              const isDown = it.priceDelta < 0;
+              const sign = isDown ? '−' : '+';
+              const arrow = isDown ? '▼' : '▲';
+              priceCell = `<span style="color:#64748B;text-decoration:line-through;">${fmtNum(it.prevPrice)} ₽</span> → <strong>${fmtNum(it.price)} ₽</strong><div style="font-size:10.5px;color:#64748B;">${fmtNum(calcPpm(it))} ₽/м²</div>`;
+              badgeCell = `<span class="badge-delta ${isDown ? 'badge-down' : 'badge-up'}">${arrow} ${sign}${fmtNum(Math.abs(it.priceDelta))} ₽ (${sign}${Math.abs(it.priceDeltaPct).toFixed(1)}%)</span>`;
+            }
+            rowsHtml += `
+              <tr>
+                <td><strong>${it.title}</strong></td>
+                <td>${it.sellerName}</td>
+                <td>${priceCell}</td>
+                <td>${badgeCell}</td>
+              </tr>`;
+          }
+
+          html += `
+            <div class="digest-group-title">${gName} (${items.length})</div>
+            <table class="digest-mini-table">
+              <thead><tr><th>Объект</th><th>Продавец</th><th>Динамика цены</th><th>Сигнал</th></tr></thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>`;
+        }
+
+        els.digestTablesContainer.innerHTML = html;
+      }
+
+      function triggerMarketSimulation() {
+        const targetDrop = listings.find((x) => x.id === 're_102');
+        const targetClose = listings.find((x) => x.id === 're_108');
+        const flashed = [];
+
+        if (targetDrop && !marketSimulatedOnce) {
+          targetDrop.prevPrice = targetDrop.price;
+          targetDrop.price = 30400000;
+          targetDrop.priceDelta = -1500000;
+          targetDrop.priceDeltaPct = -4.7;
+          targetDrop.history += ' → сейчас: 30 400 000 ₽';
+          targetDrop.aiNote = 'Конкурент снизил цену на 1,5 млн ₽ (−4,7%)!';
+          flashed.push(targetDrop.id);
+        } else if (targetDrop) {
+          targetDrop.prevPrice = targetDrop.price;
+          targetDrop.price = Math.max(28500000, targetDrop.price - 450000);
+          targetDrop.priceDelta = targetDrop.price - targetDrop.prevPrice;
+          targetDrop.priceDeltaPct = Number(((targetDrop.priceDelta / targetDrop.prevPrice) * 100).toFixed(2));
+          flashed.push(targetDrop.id);
+        }
+
+        if (targetClose && targetClose.status !== 'снято') {
+          targetClose.status = 'снято';
+          targetClose.isWatched = true;
+          targetClose.aiNote = 'Объект снят с Авито (последняя цена 15,2 млн ₽ сохранена)';
+          flashed.push(targetClose.id);
+        }
+
+        marketSimulatedOnce = true;
+        renderCrmTable(flashed);
+        renderDigestEmail();
+        showToast('Фоновая проверка выявила снижение −1,5 млн ₽ в ЗИЛАРТе и 1 снятую студию!');
+      }
+
+      // --- Движок сцен и авто-шоурила ---
+      const SCENES = [
+        {
+          panelId: 'scene-0',
+          durationMs: 7000,
+          narration: 'AvitoPRO uniexp автоматизирует две главные задачи агентства недвижимости: быстрый выход на прямых собственников и ежедневный мониторинг цен по ЖК и конкурентам.',
+          onEnter() {
+            hideCursor();
+          }
+        },
+        {
+          panelId: 'scene-1',
+          durationMs: 8500,
+          narration: 'В боковой панели аналитик или РОП в 1 клик добавляет выборки ЖК или витрины конкурирующих агентств и включает фоновую проверку по расписанию.',
+          onEnter(auto) {
+            els.addedWlCard.style.display = 'none';
+            els.spJobBar.style.width = '25%';
+            els.spJobText.textContent = 'Готов к фоновому обходу групп ЖК';
+            if (!auto) return;
+
+            scheduleStep(1200, () => moveCursorAndClick(els.spAddCurrentTabBtn, () => {
+              els.addedWlCard.style.display = 'flex';
+              els.spWatchedStat.textContent = '83';
+              showToast('Добавлена группа: Витрина конкурента «Премиум Риелти»');
+            }));
+
+            scheduleStep(3800, () => moveCursorAndClick(els.spRunWatchBtn, () => {
+              els.spJobText.textContent = 'Мониторинг (группы 2/3): ЖК Бизнес-класс — стр. 2...';
+              els.spJobBar.style.width = '78%';
+            }));
+
+            scheduleStep(6400, () => {
+              els.spJobText.textContent = 'Проверено: 167 объектов · новых событий изменения цен: 4';
+              els.spJobBar.style.width = '100%';
+            });
+          }
+        },
+        {
+          panelId: 'scene-crm',
+          durationMs: 8500,
+          narration: 'Фильтр «Анти-агент» считает количество объектов каждого продавца и мгновенно оставляет только реальных собственников, а ★ ставит ликвидный лот на точечный контроль.',
+          onEnter(auto) {
+            onlyOwnersFilter = false;
+            els.antiAgentBtn.classList.remove('active');
+            els.reWatchFilter.value = 'all';
+            els.reAiDrawer.classList.remove('open');
+            renderCrmTable();
+            if (!auto) return;
+
+            scheduleStep(1600, () => moveCursorAndClick(els.antiAgentBtn, () => {
+              onlyOwnersFilter = true;
+              els.antiAgentBtn.classList.add('active');
+              renderCrmTable();
+              showToast('Скрыты агентства и частные маклеры (> 2 объявлений в базе)');
+            }));
+
+            scheduleStep(4800, () => {
+              const starEl = document.getElementById('star-re_103');
+              if (starEl) {
+                moveCursorAndClick(starEl, () => {
+                  const item = listings.find((x) => x.id === 're_103');
+                  if (item) item.isWatched = true;
+                  renderCrmTable(['re_103']);
+                  showToast('Квартира на м. Академическая поставлена на точечный контроль ★');
+                });
+              }
+            });
+          }
+        },
+        {
+          panelId: 'scene-crm',
+          durationMs: 9000,
+          narration: 'При фоновой перепроверке фиксируется любое снижение или рост цены (в ₽ и ₽/м²), а у проданных и снятых квартир сохраняется последняя реальная цена вместо 0 ₽.',
+          onEnter(auto) {
+            onlyOwnersFilter = false;
+            els.antiAgentBtn.classList.remove('active');
+            els.reWatchFilter.value = 'all';
+            els.reAiDrawer.classList.remove('open');
+            renderCrmTable();
+            if (!auto) return;
+
+            scheduleStep(1700, () => moveCursorAndClick(els.simulateMarketBtn, () => {
+              triggerMarketSimulation();
+            }));
+
+            scheduleStep(5400, () => moveCursorAndClick(els.reWatchFilter, () => {
+              els.reWatchFilter.value = 'changed';
+              renderCrmTable();
+            }));
+          }
+        },
+        {
+          panelId: 'scene-crm',
+          durationMs: 8000,
+          narration: 'Встроенный ИИ оценивает карточку по критериям агентства (0–100), находит скрытых посредников и пишет готовое первое сообщение собственнику в чат Авито.',
+          onEnter(auto) {
+            els.reWatchFilter.value = 'all';
+            onlyOwnersFilter = false;
+            els.antiAgentBtn.classList.remove('active');
+            renderCrmTable();
+            if (!auto) {
+              els.reAiDrawer.classList.add('open');
+              return;
+            }
+
+            scheduleStep(1300, () => moveCursorAndClick(els.toggleAiPanelBtn, () => {
+              els.reAiDrawer.classList.add('open');
+            }));
+
+            scheduleStep(4300, () => moveCursorAndClick(els.runAiDemoBtn, () => {
+              els.aiStatusNote.textContent = 'Обновлено: топ-кандидат ЖК «Символ» (95/100)';
+              showToast('ИИ подготовил персональные сообщения собственникам');
+            }));
+          }
+        },
+        {
+          panelId: 'scene-5',
+          durationMs: 9000,
+          narration: 'По итогам проверки РОП и брокеры получают одно наглядное письмо через Google Apps Script со всеми уценками и проданными лотами + готовую сводку рынка в Excel.',
+          onEnter() {
+            hideCursor();
+            renderDigestEmail();
+          }
+        }
+      ];
+
+      function clearSceneTimers() {
+        clearTimeout(sceneTimer);
+        clearInterval(progressInterval);
+        for (const t of stepTimers) clearTimeout(t);
+        stepTimers = [];
+        els.sceneTabs.forEach((tab) => {
+          const bar = tab.querySelector('.tab-progress');
+          if (bar) bar.style.width = '0%';
+        });
+      }
+
+      function scheduleStep(delayMs, fn) {
+        const id = setTimeout(() => {
+          if (isAutoPlaying) fn();
+        }, delayMs);
+        stepTimers.push(id);
+      }
+
+      function moveCursorAndClick(targetEl, callback) {
+        if (!targetEl || !isAutoPlaying) return;
+        const rect = targetEl.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) return;
+
+        const x = Math.round(rect.left + Math.min(rect.width * 0.45, 70));
+        const y = Math.round(rect.top + rect.height * 0.55);
+
+        els.demoCursor.classList.add('visible');
+        els.demoCursor.style.left = `${x}px`;
+        els.demoCursor.style.top = `${y}px`;
+
+        const clickId = setTimeout(() => {
+          if (!isAutoPlaying) return;
+          els.demoCursor.classList.remove('clicking');
+          void els.demoCursor.offsetWidth;
+          els.demoCursor.classList.add('clicking');
+          if (typeof callback === 'function') callback();
+        }, 720);
+        stepTimers.push(clickId);
+      }
+
+      function hideCursor() {
+        els.demoCursor.classList.remove('visible', 'clicking');
+      }
+
+      function activateScene(index, { fromUser = false } = {}) {
+        clearSceneTimers();
+        if (fromUser && isAutoPlaying) {
+          setAutoPlayState(false);
+        }
+
+        currentSceneIdx = (index + SCENES.length) % SCENES.length;
+        const def = SCENES[currentSceneIdx];
+
+        [els.scene0, els.scene1, els.sceneCrm, els.scene5].forEach((p) => p.classList.remove('active'));
+        document.getElementById(def.panelId).classList.add('active');
+
+        els.sceneTabs.forEach((t, i) => t.classList.toggle('active', i === currentSceneIdx));
+        els.narratorStepLabel.textContent = `Сцена ${currentSceneIdx + 1} / ${SCENES.length}`;
+        els.narratorText.textContent = def.narration;
+
+        def.onEnter(isAutoPlaying);
+
+        if (isAutoPlaying) {
+          const activeTabBar = els.sceneTabs[currentSceneIdx]?.querySelector('.tab-progress');
+          const started = Date.now();
+          progressInterval = setInterval(() => {
+            const pct = Math.min(100, ((Date.now() - started) / def.durationMs) * 100);
+            if (activeTabBar) activeTabBar.style.width = `${pct}%`;
+          }, 80);
+
+          sceneTimer = setTimeout(() => {
+            if (currentSceneIdx < SCENES.length - 1) {
+              activateScene(currentSceneIdx + 1);
+            } else {
+              setAutoPlayState(false);
+              showToast('Авто-шоурил завершён — теперь доступен свободный интерактивный режим');
+            }
+          }, def.durationMs);
+        }
+      }
+
+      function setAutoPlayState(nextAuto) {
+        isAutoPlaying = nextAuto;
+        if (isAutoPlaying) {
+          els.modeBadge.textContent = 'Авто-шоурил';
+          els.modeBadge.classList.remove('manual');
+          els.playPauseBtn.textContent = '❚❚ Пауза';
+        } else {
+          clearSceneTimers();
+          hideCursor();
+          els.modeBadge.textContent = 'Ручной режим';
+          els.modeBadge.classList.add('manual');
+          els.playPauseBtn.textContent = '▶ Авто-шоурил';
+        }
+      }
+
+      // --- Обработчики событий ---
+      els.sceneTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          activateScene(parseInt(tab.dataset.scene, 10) || 0, { fromUser: true });
+        });
+      });
+
+      els.playPauseBtn.addEventListener('click', () => {
+        const next = !isAutoPlaying;
+        setAutoPlayState(next);
+        if (next) activateScene(currentSceneIdx);
+      });
+
+      els.restartBtn.addEventListener('click', () => {
+        listings = initialListings.map((x) => ({ ...x }));
+        marketSimulatedOnce = false;
+        setAutoPlayState(true);
+        activateScene(0);
+      });
+
+      els.nextSceneBtn.addEventListener('click', () => {
+        activateScene(currentSceneIdx + 1, { fromUser: true });
+      });
+
+      els.heroStartDemoBtn.addEventListener('click', () => {
+        setAutoPlayState(true);
+        activateScene(1);
+      });
+
+      els.heroSwitchManualBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        activateScene(2);
+      });
+
+      // Интерактив Сцены 2
+      els.spAddCurrentTabBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        els.addedWlCard.style.display = 'flex';
+        els.spWatchedStat.textContent = '83';
+        showToast('Группа из открытой вкладки Авито добавлена в мониторинг');
+      });
+
+      els.spRunWatchBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        els.spJobText.textContent = 'Фоновый обход активных групп ЖК...';
+        els.spJobBar.style.width = '55%';
+        setTimeout(() => {
+          els.spJobBar.style.width = '100%';
+          els.spJobText.textContent = 'Проверка завершена: найдено 4 события по ценам';
+          showToast('Фоновая проверка завершена');
+        }, 900);
+      });
+
+      els.spOpenTableBtn.addEventListener('click', () => {
+        activateScene(2, { fromUser: true });
+      });
+
+      // Интерактив таблицы недвижимости
+      els.reSegmentFilter.addEventListener('change', () => { setAutoPlayState(false); renderCrmTable(); });
+      els.reWatchFilter.addEventListener('change', () => { setAutoPlayState(false); renderCrmTable(); });
+      els.reSearchInput.addEventListener('input', () => { setAutoPlayState(false); renderCrmTable(); });
+
+      els.antiAgentBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        onlyOwnersFilter = !onlyOwnersFilter;
+        els.antiAgentBtn.classList.toggle('active', onlyOwnersFilter);
+        renderCrmTable();
+      });
+
+      els.simulateMarketBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        triggerMarketSimulation();
+      });
+
+      els.toggleAiPanelBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        els.reAiDrawer.classList.toggle('open');
+      });
+
+      els.runAiDemoBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        els.aiStatusNote.textContent = 'Пересчитано: выделены 4 лота от прямых собственников';
+        showToast('ИИ-оценка и тексты сообщений обновлены');
+      });
+
+      els.goDigestBtn.addEventListener('click', () => {
+        activateScene(5, { fromUser: true });
+      });
+
+      els.backToTableBtn.addEventListener('click', () => {
+        activateScene(2, { fromUser: true });
+      });
+
+      document.querySelectorAll('.re-table thead th[data-sort]').forEach((th) => {
+        th.addEventListener('click', () => {
+          setAutoPlayState(false);
+          const k = th.dataset.sort;
+          if (sortKey === k) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+          else { sortKey = k; sortDir = 'desc'; }
+          renderCrmTable();
+        });
+      });
+
+      els.downloadDemoCsvBtn.addEventListener('click', () => {
+        setAutoPlayState(false);
+        const headers = ['В мониторинге', 'Сегмент', 'Объект', 'Цена ₽', 'Цена за м²', 'Пред. цена', 'Изменение ₽', 'Статус Авито', 'Продавец', 'Объявлений продавца', 'ИИ-скоринг', 'Статус CRM'];
+        const lines = [headers.join(';')];
+        for (const it of listings) {
+          lines.push([
+            it.isWatched || it.inGroup ? 'Да' : '',
+            it.segment,
+            `"${it.title.replace(/"/g, '""')}"`,
+            it.price,
+            calcPpm(it),
+            it.prevPrice || '',
+            it.priceDelta || '',
+            it.status,
+            `"${it.sellerName.replace(/"/g, '""')}"`,
+            it.sellerAds,
+            it.aiScore,
+            it.crm
+          ].join(';'));
+        }
+        const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'AvitoPRO_RealEstate_Demo.csv';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1000);
+        showToast('Демо-выгрузка AvitoPRO_RealEstate_Demo.csv скачана');
+      });
+
+      // Старт
+      renderCrmTable();
+      renderDigestEmail();
+      activateScene(0);
+    })();
+  </script>
+</body>
+</html>
