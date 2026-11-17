@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AvitoPRO uniexp — Презентация для агентства недвижимости</title>
   <style>
     :root {
@@ -1064,9 +1064,490 @@
       transform: translateY(0);
     }
 
+    .re-search-input {
+      width: 210px;
+    }
+
+    .mobile-price-history {
+      display: none;
+      font-size: 10.5px;
+      color: #64748B;
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .narrator-nav-btns {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
     @media (max-width: 1040px) {
       .hero-grid, .split-browser, .digest-layout, .ai-drawer-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .deck-topbar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+      }
+
+      .deck-brand {
+        min-width: 0;
+        gap: 8px;
+      }
+
+      .deck-title {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .deck-subtitle,
+      .mode-pill {
+        display: none;
+      }
+
+      .deck-controls {
+        gap: 5px;
+      }
+
+      .deck-controls .ctrl-btn {
+        padding: 6px 9px;
+        font-size: 11.5px;
+      }
+
+      .scene-tabs {
+        grid-column: 1 / -1;
+        order: 3;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+        padding-bottom: 2px;
+      }
+
+      .scene-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .scene-tab {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 6px 10px;
+        font-size: 11.5px;
+      }
+
+      .stage-wrap {
+        padding: 12px 10px calc(128px + env(safe-area-inset-bottom, 0px));
+        justify-content: flex-start;
+      }
+
+      /* Сцена 1 на телефоне */
+      .hero-grid {
+        gap: 14px;
+      }
+
+      .hero-main {
+        padding: 18px 15px;
+        border-radius: 13px;
+      }
+
+      .eyebrow {
+        font-size: 10.5px;
+        margin-bottom: 10px;
+      }
+
+      .hero-h1 {
+        font-size: 22px;
+        line-height: 1.22;
+      }
+
+      .hero-lead {
+        font-size: 13.5px;
+        line-height: 1.48;
+        margin-top: 10px;
+      }
+
+      .hero-kpis {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .kpi-box {
+        padding: 11px 13px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .kpi-val {
+        font-size: 17px;
+        white-space: nowrap;
+        min-width: 86px;
+      }
+
+      .kpi-lbl {
+        margin-top: 0;
+        font-size: 11.5px;
+      }
+
+      .hero-actions {
+        margin-top: 16px;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .hero-actions .ctrl-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .value-card {
+        padding: 13px 14px;
+      }
+
+      .value-card-head {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .value-card h3 {
+        font-size: 13.5px;
+      }
+
+      /* Шапка макета браузера на телефоне */
+      .browser-window {
+        border-radius: 11px;
+      }
+
+      .browser-bar {
+        padding: 7px 10px;
+        gap: 8px;
+      }
+
+      .win-dots,
+      .ext-badge,
+      .address-bar span:last-child {
+        display: none;
+      }
+
+      .address-bar {
+        padding: 4px 10px;
+        font-size: 11px;
+        min-width: 0;
+      }
+
+      .address-bar span:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Сцена 2: Боковая панель сверху, карточки ниже */
+      .split-browser {
+        min-height: auto;
+      }
+
+      .ext-sidepanel {
+        order: -1;
+        border-bottom: 2px solid var(--ui-border);
+        padding: 13px;
+      }
+
+      .avito-feed-mock {
+        padding: 12px;
+        border-right: none;
+      }
+
+      .avito-search-head {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .avito-feed-title {
+        font-size: 14px;
+      }
+
+      .feed-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      /* Сцены 3–5: Мобильные карточки вместо широкой таблицы */
+      .crm-workspace {
+        padding: 10px;
+        min-height: auto;
+      }
+
+      .crm-toolbar {
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .crm-toolbar-left,
+      .crm-toolbar-right {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+      }
+
+      .re-search-input,
+      .anti-agent-chip,
+      #simulateMarketBtn,
+      #goDigestBtn {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      #toggleAiPanelBtn {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .ui-select,
+      .ui-input,
+      .ui-btn,
+      .anti-agent-chip {
+        min-height: 38px;
+        font-size: 13px;
+        justify-content: center;
+      }
+
+      .ui-input,
+      .ui-select {
+        font-size: 16px; /* предотвращает авто-зум iOS Safari */
+      }
+
+      .data-table-wrap {
+        background: transparent;
+        border: none;
+        overflow-x: visible;
+      }
+
+      .re-table,
+      .re-table tbody {
+        display: block;
+        width: 100%;
+      }
+
+      .re-table thead {
+        display: none;
+      }
+
+      .re-table tbody tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 10px;
+        background: #FFFFFF;
+        border: 1px solid var(--ui-border);
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+        position: relative;
+      }
+
+      .re-table tbody tr.row-good {
+        background: #F2FBF5;
+        border-color: #A7F3D0;
+      }
+
+      .re-table tbody tr.row-closed {
+        background: #F4F5F7;
+      }
+
+      .re-table tbody td {
+        border: none !important;
+        padding: 0 !important;
+        white-space: normal !important;
+        background: transparent !important;
+      }
+
+      .re-table tbody td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748B;
+        margin-bottom: 2px;
+      }
+
+      .re-table tbody td.cell-star {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+      }
+
+      .re-table tbody td.cell-star::before {
+        display: none;
+      }
+
+      .re-table tbody td.cell-star .star-btn {
+        font-size: 22px;
+        padding: 4px;
+      }
+
+      .re-table tbody td.cell-title {
+        grid-column: 1 / -1;
+        padding-right: 34px !important;
+        border-bottom: 1px solid #EAEEF2 !important;
+        padding-bottom: 8px !important;
+      }
+
+      .re-table tbody td.cell-title::before {
+        display: none;
+      }
+
+      .re-table tbody td.cell-seller,
+      .re-table tbody td.cell-ai,
+      .re-table tbody td.cell-crm {
+        grid-column: 1 / -1;
+      }
+
+      .re-table tbody td.cell-ai div {
+        max-width: none !important;
+        white-space: normal !important;
+      }
+
+      .re-table tbody td.cell-crm .ui-select {
+        width: 100%;
+      }
+
+      .mobile-price-history {
+        display: block;
+      }
+
+      /* Сцена 6: Мобильный почтовый клиент и карточки дайджеста */
+      .digest-layout {
+        padding: 10px;
+        gap: 12px;
+        min-height: auto;
+      }
+
+      .mail-meta-head {
+        padding: 12px;
+      }
+
+      .mail-subj {
+        font-size: 13.5px;
+        line-height: 1.35;
+      }
+
+      .mail-from {
+        flex-direction: column;
+        gap: 3px;
+        font-size: 11px;
+      }
+
+      .mail-body-inner {
+        padding: 12px;
+      }
+
+      .digest-mini-table,
+      .digest-mini-table tbody {
+        display: block;
+        border: none;
+      }
+
+      .digest-mini-table thead {
+        display: none;
+      }
+
+      .digest-mini-table tr {
+        display: block;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 8px;
+        background: #FFFFFF;
+      }
+
+      .digest-mini-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        border-bottom: 1px dashed #F1F5F9;
+        padding: 5px 0;
+        text-align: right;
+      }
+
+      .digest-mini-table td:first-child {
+        display: block;
+        text-align: left;
+        border-bottom: 1px solid #E2E8F0;
+        padding-bottom: 6px;
+        margin-bottom: 3px;
+      }
+
+      .digest-mini-table td:first-child::before {
+        display: none;
+      }
+
+      .digest-mini-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .digest-mini-table td::before {
+        content: attr(data-label);
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748B;
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .xlsx-row {
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      /* Нижний док навигации и тосты */
+      .narrator-dock {
+        bottom: 8px;
+        width: calc(100% - 16px);
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+        flex-wrap: wrap;
+        gap: 6px 10px;
+      }
+
+      .narrator-step {
+        font-size: 10.5px;
+      }
+
+      .narrator-nav-btns {
+        margin-left: auto;
+      }
+
+      .narrator-text {
+        order: 3;
+        flex: 1 1 100%;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .toast-banner {
+        top: auto;
+        bottom: 112px;
+        left: 12px;
+        right: 12px;
+        font-size: 12px;
+        text-align: center;
       }
     }
   </style>
@@ -1367,7 +1848,7 @@
                 <option value="closed">Снятые / проданные</option>
               </select>
 
-              <input type="search" id="reSearchInput" class="ui-input" placeholder="Поиск по ЖК, метро, описанию..." style="width:210px;">
+              <input type="search" id="reSearchInput" class="ui-input re-search-input" placeholder="Поиск по ЖК, метро, описанию...">
 
               <button type="button" id="antiAgentBtn" class="anti-agent-chip" title="Фильтр перекупов и риелторов: скрыть продавцов с > 2 объектами в базе">
                 <span>Анти-агент (только собственники ≤ 2 объявл.)</span>
@@ -1525,7 +2006,10 @@
     <p id="narratorText" class="narrator-text">
       Обзор возможностей AvitoPRO uniexp для агентства недвижимости: набор эксклюзивов от собственников и круглосуточный контроль цен конкурентов.
     </p>
-    <button type="button" id="nextSceneBtn" class="ctrl-btn">Далее →</button>
+    <div class="narrator-nav-btns">
+      <button type="button" id="prevSceneBtn" class="ctrl-btn" title="Предыдущая сцена">←</button>
+      <button type="button" id="nextSceneBtn" class="ctrl-btn">Далее →</button>
+    </div>
   </footer>
 
   <!-- Анимированный демо-курсор для авто-шоурила -->
@@ -1737,6 +2221,7 @@
         modeBadge: document.getElementById('modeBadge'),
         playPauseBtn: document.getElementById('playPauseBtn'),
         restartBtn: document.getElementById('restartBtn'),
+        prevSceneBtn: document.getElementById('prevSceneBtn'),
         nextSceneBtn: document.getElementById('nextSceneBtn'),
         narratorStepLabel: document.getElementById('narratorStepLabel'),
         narratorText: document.getElementById('narratorText'),
@@ -1841,6 +2326,8 @@
 
           // 1. Star
           const tdStar = document.createElement('td');
+          tdStar.className = 'cell-star';
+          tdStar.dataset.label = 'Слежка';
           const starBtn = document.createElement('button');
           starBtn.type = 'button';
           starBtn.id = `star-${item.id}`;
@@ -1859,6 +2346,8 @@
 
           // 2. Title
           const tdTitle = document.createElement('td');
+          tdTitle.className = 'cell-title';
+          tdTitle.dataset.label = 'Объект';
           tdTitle.innerHTML = `<div style="font-weight:700;color:#0F172A;">${item.title}</div><div style="font-size:11px;color:#64748B;">${item.segment}</div>`;
           tdTitle.style.cursor = 'pointer';
           tdTitle.addEventListener('click', () => {
@@ -1871,24 +2360,27 @@
 
           // 3. Price
           const tdPrice = document.createElement('td');
-          tdPrice.style.fontWeight = '700';
-          tdPrice.textContent = `${fmtNum(item.price)} ₽`;
+          tdPrice.dataset.label = 'Цена сейчас';
+          tdPrice.innerHTML = `<div style="font-weight:700;">${fmtNum(item.price)} ₽</div><div class="mobile-price-history">${item.history}</div>`;
           tdPrice.title = `История цен: ${item.history}`;
           tr.appendChild(tdPrice);
 
           // 4. Price per m2
           const tdPpm = document.createElement('td');
+          tdPpm.dataset.label = 'Цена за м²';
           tdPpm.textContent = `${fmtNum(calcPpm(item))} ₽/м²`;
           tr.appendChild(tdPpm);
 
           // 5. Prev price
           const tdPrev = document.createElement('td');
+          tdPrev.dataset.label = 'Пред. цена';
           tdPrev.style.color = '#64748B';
           tdPrev.textContent = item.prevPrice > 0 ? `${fmtNum(item.prevPrice)} ₽` : '—';
           tr.appendChild(tdPrev);
 
           // 6. Delta
           const tdDelta = document.createElement('td');
+          tdDelta.dataset.label = 'Изменение';
           if (item.priceDelta === 0) {
             tdDelta.textContent = '—';
           } else {
@@ -1904,6 +2396,7 @@
 
           // 7. Status
           const tdStatus = document.createElement('td');
+          tdStatus.dataset.label = 'Статус Авито';
           if (item.status === 'снято') {
             tdStatus.innerHTML = `<span class="badge-delta badge-closed" title="Авито скрыл цену, сохранена последняя экспозиционная цена">снято (цена сохр.)</span>`;
           } else {
@@ -1913,18 +2406,24 @@
 
           // 8. Seller
           const tdSeller = document.createElement('td');
+          tdSeller.className = 'cell-seller';
+          tdSeller.dataset.label = 'Продавец';
           const isOwner = item.sellerAds <= 2;
           tdSeller.innerHTML = `<div>${item.sellerName}</div><span class="seller-pill ${isOwner ? 'seller-owner' : 'seller-agent'}">${isOwner ? 'Собственник' : 'Агентство / маклер'}: ${item.sellerAds} объявл.</span>`;
           tr.appendChild(tdSeller);
 
           // 9. AI score
           const tdAi = document.createElement('td');
+          tdAi.className = 'cell-ai';
+          tdAi.dataset.label = 'ИИ-скоринг';
           const sCls = item.aiScore >= 85 ? 'score-high' : (item.aiScore >= 60 ? 'score-mid' : 'score-low');
           tdAi.innerHTML = `<span class="ai-score-pill ${sCls}">${item.aiScore}/100</span><div style="font-size:10.5px;color:#64748B;max-width:210px;overflow:hidden;text-overflow:ellipsis;" title="${item.aiNote}">${item.aiNote}</div>`;
           tr.appendChild(tdAi);
 
           // 10. CRM status
           const tdCrm = document.createElement('td');
+          tdCrm.className = 'cell-crm';
+          tdCrm.dataset.label = 'Статус CRM';
           const sel = document.createElement('select');
           sel.className = 'ui-select';
           for (const st of CRM_STATUSES) {
@@ -1980,10 +2479,10 @@
             }
             rowsHtml += `
               <tr>
-                <td><strong>${it.title}</strong></td>
-                <td>${it.sellerName}</td>
-                <td>${priceCell}</td>
-                <td>${badgeCell}</td>
+                <td data-label="Объект"><strong>${it.title}</strong></td>
+                <td data-label="Продавец">${it.sellerName}</td>
+                <td data-label="Динамика">${priceCell}</td>
+                <td data-label="Сигнал">${badgeCell}</td>
               </tr>`;
           }
 
@@ -2178,24 +2677,35 @@
 
       function moveCursorAndClick(targetEl, callback) {
         if (!targetEl || !isAutoPlaying) return;
-        const rect = targetEl.getBoundingClientRect();
-        if (rect.width === 0 && rect.height === 0) return;
+        const initialRect = targetEl.getBoundingClientRect();
+        if (initialRect.width === 0 && initialRect.height === 0) return;
 
-        const x = Math.round(rect.left + Math.min(rect.width * 0.45, 70));
-        const y = Math.round(rect.top + rect.height * 0.55);
+        const needsScroll = initialRect.top < 96 || initialRect.bottom > (window.innerHeight - 116);
+        if (needsScroll) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
 
-        els.demoCursor.classList.add('visible');
-        els.demoCursor.style.left = `${x}px`;
-        els.demoCursor.style.top = `${y}px`;
-
-        const clickId = setTimeout(() => {
+        const startMoveDelay = needsScroll ? 340 : 0;
+        const moveId = setTimeout(() => {
           if (!isAutoPlaying) return;
-          els.demoCursor.classList.remove('clicking');
-          void els.demoCursor.offsetWidth;
-          els.demoCursor.classList.add('clicking');
-          if (typeof callback === 'function') callback();
-        }, 720);
-        stepTimers.push(clickId);
+          const rect = targetEl.getBoundingClientRect();
+          const x = Math.max(16, Math.min(window.innerWidth - 28, Math.round(rect.left + Math.min(rect.width * 0.45, 70))));
+          const y = Math.max(16, Math.min(window.innerHeight - 28, Math.round(rect.top + rect.height * 0.55)));
+
+          els.demoCursor.classList.add('visible');
+          els.demoCursor.style.left = `${x}px`;
+          els.demoCursor.style.top = `${y}px`;
+
+          const clickId = setTimeout(() => {
+            if (!isAutoPlaying) return;
+            els.demoCursor.classList.remove('clicking');
+            void els.demoCursor.offsetWidth;
+            els.demoCursor.classList.add('clicking');
+            if (typeof callback === 'function') callback();
+          }, 680);
+          stepTimers.push(clickId);
+        }, startMoveDelay);
+        stepTimers.push(moveId);
       }
 
       function hideCursor() {
@@ -2215,6 +2725,12 @@
         document.getElementById(def.panelId).classList.add('active');
 
         els.sceneTabs.forEach((t, i) => t.classList.toggle('active', i === currentSceneIdx));
+        const activeTabEl = els.sceneTabs[currentSceneIdx];
+        if (activeTabEl && typeof activeTabEl.scrollIntoView === 'function') {
+          activeTabEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         els.narratorStepLabel.textContent = `Сцена ${currentSceneIdx + 1} / ${SCENES.length}`;
         els.narratorText.textContent = def.narration;
 
@@ -2274,9 +2790,35 @@
         activateScene(0);
       });
 
+      els.prevSceneBtn.addEventListener('click', () => {
+        activateScene(currentSceneIdx - 1, { fromUser: true });
+      });
+
       els.nextSceneBtn.addEventListener('click', () => {
         activateScene(currentSceneIdx + 1, { fromUser: true });
       });
+
+      // Свайп влево/вправо на мобильных экранах для переключения сцен
+      let touchStartX = 0;
+      let touchStartY = 0;
+      document.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const tag = (e.target?.tagName || '').toLowerCase();
+        if (['input', 'select', 'textarea', 'button'].includes(tag)) return;
+        if (e.target?.closest('.scene-tabs')) return;
+
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 70 && Math.abs(dy) < 42) {
+          activateScene(dx < 0 ? currentSceneIdx + 1 : currentSceneIdx - 1, { fromUser: true });
+        }
+      }, { passive: true });
 
       els.heroStartDemoBtn.addEventListener('click', () => {
         setAutoPlayState(true);
