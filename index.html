@@ -1092,7 +1092,7 @@
     @media (max-width: 768px) {
       .deck-topbar {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
         gap: 8px;
         padding: 9px 12px;
@@ -1101,6 +1101,10 @@
       .deck-brand {
         min-width: 0;
         gap: 8px;
+      }
+
+      .deck-title-wrap {
+        min-width: 0;
       }
 
       .deck-title {
@@ -1126,6 +1130,7 @@
 
       .scene-tabs {
         grid-column: 1 / -1;
+        min-width: 0;
         order: 3;
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -1297,9 +1302,17 @@
       .crm-toolbar-left,
       .crm-toolbar-right {
         width: 100%;
+        min-width: 0;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 7px;
+      }
+
+      .crm-toolbar-left > *,
+      .crm-toolbar-right > * {
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
       }
 
       .re-search-input,
